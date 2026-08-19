@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>台南嘉義行程</title>
+<style>
+  :root {
+    --ink: #26221c;
+    --ink-soft: #6b6459;
+    --paper: #faf6ee;
+    --card: #ffffff;
+    --line: #e7e0d2;
+    --teal: #1c4a45;
+    --teal-deep: #123331;
+    --clay: #b5502e;
+    --clay-soft: #f3e2da;
+    --gold: #c68a2e;
+    --gold-soft: #f6ecd8;
+    --green: #3b6d11;
+    --green-soft: #eaf3de;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    padding-bottom: 40px;
+  }
+  header {
+    background: var(--teal-deep);
+    color: #f3efe4;
+    padding: 16px 16px 12px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  header h1 { font-size: 19px; margin: 0 0 3px; font-weight: 700; }
+  header p { margin: 0; font-size: 14px; color: #b9c4bf; }
+  .tabs { display: flex; gap: 8px; margin-top: 11px; }
+  .tab {
+    flex: 1; text-align: center; padding: 10px 0; border-radius: 10px;
+    background: rgba(255,255,255,0.08); color: #d8d2c2; font-size: 16px;
+    font-weight: 700; border: 1px solid rgba(255,255,255,0.15);
+  }
+  .tab.active { background: var(--gold); color: #3a2a08; border-color: var(--gold); }
+  main { padding: 12px 12px 8px; }
+  .day { display: none; }
+  .day.active { display: block; }
+  .notice {
+    background: var(--gold-soft); border-left: 4px solid var(--gold); border-radius: 8px;
+    padding: 12px 14px; font-size: 16px; line-height: 1.6; margin-bottom: 14px; color: #4a3510;
+  }
+  .notice b { color: #3a2a08; }
+  .section-label {
+    font-size: 14.5px; color: var(--ink-soft); font-weight: 700; letter-spacing: 0.5px;
+    margin: 20px 3px 9px; text-transform: uppercase;
+  }
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    padding: 14px 15px; margin-bottom: 10px;
+  }
+  .card-top { display: flex; align-items: flex-start; gap: 11px; }
+  .time { font-size: 16px; font-weight: 700; color: var(--teal); min-width: 52px; padding-top: 2px; flex-shrink: 0; }
+  .body { flex: 1; min-width: 0; }
+  .name { font-size: 19px; font-weight: 700; color: var(--ink); margin: 0 0 3px; line-height: 1.35; }
+  .addr { font-size: 15px; color: var(--ink-soft); margin: 0 0 6px; line-height: 1.4; }
+  .hours { font-size: 15px; color: var(--teal); font-weight: 700; margin: 0 0 6px; line-height: 1.4; }
+  .desc { font-size: 16.5px; color: var(--ink); line-height: 1.65; margin: 0; }
+  .desc b { color: var(--clay); }
+  .tags { margin-top: 9px; display: flex; gap: 7px; flex-wrap: wrap; }
+  .tag { font-size: 13.5px; padding: 4px 10px; border-radius: 20px; font-weight: 700; }
+  .tag.warn { background: var(--clay-soft); color: var(--clay); }
+  .tag.ok { background: var(--green-soft); color: var(--green); }
+  .tag.info { background: #eef0ec; color: var(--ink-soft); }
+  .btnrow { display: flex; gap: 8px; flex-shrink: 0; }
+  .nav-btn, .call-btn {
+    width: 48px; height: 48px; border-radius: 11px; display: flex; align-items: center;
+    justify-content: center; text-decoration: none; flex-shrink: 0;
+  }
+  .nav-btn { background: var(--teal); }
+  .call-btn { background: var(--gold-soft); border: 1px solid var(--gold); }
+  .pin { width: 23px; height: 23px; }
+  .phone { width: 19px; height: 19px; }
+  .stall {
+    border-top: 1px solid var(--line);
+    padding: 13px 0 5px;
+  }
+  .stall:first-child { border-top: none; padding-top: 0; }
+  .stall-top { display: flex; align-items: flex-start; gap: 11px; }
+  .stall .name { font-size: 17.5px; }
+  .stall .desc { font-size: 15.5px; }
+  .stall .nav-btn { width: 42px; height: 42px; border-radius: 10px; }
+  .stall .pin { width: 19px; height: 19px; }
+  .group-note {
+    font-size: 15px; color: var(--ink-soft); line-height: 1.6; margin: 0 0 10px; padding: 0 1px;
+  }
+  .group-note b { color: var(--clay); }
+  .divider { height: 8px; }
+  footer { text-align: center; font-size: 13.5px; color: var(--ink-soft); padding: 20px 20px 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>台南 · 嘉義小旅行</h1>
+  <p>2大人 · 自駕SUV · 智選假日酒店（嘉義市西區中興路69號）</p>
+  <div class="tabs">
+    <div class="tab active" data-day="d21">8/21（五）台南 → 嘉義</div>
+    <div class="tab" data-day="d22">8/22（六）新港 → 夜市</div>
+  </div>
+</header>
+
+<main>
+
+<div class="day active" id="d21">
+
+  <div class="notice">
+    <b>今晚已訂位：</b>佳園汕頭火鍋 19:00｜只收現金<br>
+    <b>停車只停一次：</b>海安路地下停車場，入口門牌 <b>700臺南市中西區淺草里海安路二段75號</b>（海安路很長有兩三個入口，務必導航這個門牌，不然容易找錯入口）
+  </div>
+
+  <div class="section-label">上午</div>
+
+  <div class="card">
+    <div class="card-top">
+      <div class="time">09:15</div>
+      <div class="body">
+        <p class="name">南科考古館</p>
+        <p class="addr">台南市新市區南科三路10號</p>
+        <p class="hours">09:00-17:00・週一公休・免門票</p>
+        <p class="desc">國立臺灣史前文化博物館分館，館藏是台南科學園區開發時考古挖掘出的遺址文物，用時間序列、主題呈現、考古研究應用三大主題，展出過去5000年不同時期的生活方式。<b>全館室內</b>，因奇美博物館法老展票售完而改排此點，方向更順路（新市在往嘉義的路線上）。</p>
+        <div class="tags"><span class="tag info">抓1.5-2小時</span><span class="tag ok">室內不怕雨</span></div>
+      </div>
+      <div class="btnrow">
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E5%9C%8B%E7%AB%8B%E8%87%BA%E7%81%A3%E5%8F%B2%E5%89%8D%E6%96%87%E5%8C%96%E5%8D%9A%E7%89%A9%E9%A4%A8%E5%8D%97%E7%A7%91%E8%80%83%E5%8F%A4%E9%A4%A8%20%E5%8F%B0%E5%8D%97%E5%B8%82%E6%96%B0%E5%B8%82%E5%8D%80%E5%8D%97%E7%A7%91%E4%B8%89%E8%B7%AF10%E8%99%9F" aria-label="導航">
+          <svg class="pin" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top">
+      <div class="time">11:40</div>
+      <div class="body">
+        <p class="name">海安路地下停車場（入口）</p>
+        <p class="addr">700臺南市中西區淺草里海安路二段75號</p>
+        <p class="desc">這是這區最大的停車場，停好後以下所有小吃都在步行範圍內。<b>今天只停這一次，全程步行不移車</b>，中西區巷弄窄，不要嘗試路邊停車，尤其開SUV。</p>
+      </div>
+      <div class="btnrow">
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E5%8F%B0%E5%8D%97%E5%B8%82%E4%B8%AD%E8%A5%BF%E5%8D%80%E6%B5%B7%E5%AE%89%E8%B7%AF%E4%BA%8C%E6%AE%B575%E8%99%9F" aria-label="導航">
+          <svg class="pin" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">午餐小吃巡禮 11:45–14:45</div>
+  <p class="group-note">全部在步行範圍內。份量都不大，<b>建議抓4-5攤、每攤點一份共食</b>，其餘當備案。<b>唯一有時間壓力：阿村牛肉湯下午2點打烊，優先去。</b></p>
+
+  <div class="card">
+    <div class="stall">
+      <div class="stall-top">
+        <div class="body">
+          <p class="name">阿村牛肉湯</p>
+          <p class="addr">中西區國華街三段</p>
+          <p class="hours" style="color:var(--clay);">～14:00 打烊</p>
+          <p class="desc">1968年開業、傳到第三代，師承西市場「助仔牛肉湯」——台南牛肉湯的創始源頭，米其林必比登。湯頭清甜、不重油脂香料。建議點：<b>牛肉湯＋高麗菜炒牛肉＋白飯</b>。</p>
+        </div>
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E9%98%BF%E6%9D%91%E7%89%9B%E8%82%89%E6%B9%AF+%E5%8F%B0%E5%8D%97%E5%9C%8B%E8%8F%AF%E8%A1%97" aria-label="導航"><svg class="pin" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></a>
+      </div>
+    </div>
+    <div class="stall">
+      <div class="stall-top">
+        <div class="body">
+          <p class="name">邱家小卷米粉</p>
+          <p class="addr">國華街三段253號</p>
+          <p class="hours">11:00-17:00・週三公休</p>
+          <p class="desc">國華街排隊冠軍之一。<b>小卷米粉120元</b>，小卷厚實Q彈、給得不小氣，湯頭是海鮮熬出的鮮甜回甘，米粉是台南特有的粗米粉。排隊約20分鐘起跳，可趁排隊時分頭去買別攤。</p>
+        </div>
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E5%8F%B0%E5%8D%97%E5%B8%82%E4%B8%AD%E8%A5%BF%E5%8D%80%E5%9C%8B%E8%8F%AF%E8%A1%97%E4%B8%89%E6%AE%B5253%E8%99%9F" aria-label="導航"><svg class="pin" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></a>
+      </div>
+    </div>
+    <div class="stall">
+      <div class="stall-top">
+        <div class="body">
+          <p class="name">阿鳳浮水虱目魚羹</p>
+          <p class="addr">中西區保安路</p>
+          <p class="hours">07:00-24:00</p>
+          <p class="desc">1957年開到現在近70年，整家店只賣這一樣。<b>浮水虱目魚羹70元</b>（可加麵或米粉），魚羹塊用虱目魚肚＋魚背肉打成魚漿、裡面包無刺虱目魚肉。淋黑醋、加薑絲香菜風味最佳。<b>從早開到半夜，最不會失手的一攤</b>。</p>
+        </div>
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E9%98%BF%E9%B3%B3%E6%B5%AE%E6%B0%B4%E8%99%B1%E7%9B%AE%E9%AD%9A%E7%BE%B9%20%E4%BF%9D%E5%AE%89%E8%B7%AF%20%E5%8F%B0%E5%8D%97" aria-label="導航"><svg class="pin" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></a>
+      </div>
+    </div>
+    <div class="stall">
+      <div class="stall-top">
+        <div class="body">
+          <p class="name">富盛號碗粿</p>
+          <p class="addr">西門路二段333巷8號</p>
+          <p class="hours">07:00-17:30・週一公休</p>
+          <p class="desc">1947年創立、永樂市場「黃金三角」第一攤。<b>碗粿30元</b>，加入肉燥與醬油製成，是帶肉燥香的深色碗粿，跟一般白碗粿完全不同。桌上有正確吃法步驟圖。</p>
+        </div>
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E5%8F%B0%E5%8D%97%E5%B8%82%E4%B8%AD%E8%A5%BF%E5%8D%80%E8%A5%BF%E9%96%80%E8%B7%AF%E4%BA%8C%E6%AE%B5333%E5%B7%B78%E8%99%9F" aria-label="導航"><svg class="pin" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></a>
+      </div>
+    </div>
+    <div class="stall">
+      <div class="stall-top">
+        <div class="body">
+          <p class="name">集品蝦仁飯</p>
+          <p class="addr">中西區海安路</p>
+          <p class="desc">用台南特有的「火燒蝦」做的古早味<b>蝦仁飯＋半熟蛋</b>，蝦仁滿滿、鹹香入味，加一顆半熟鴨蛋拌開更銷魂。</p>
+        </div>
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E9%9B%86%E5%93%81%E8%9D%A6%E4%BB%81%E9%A3%AF+%E6%B5%B7%E5%AE%89%E8%B7%AF+%E5%8F%B0%E5%8D%97" aria-label="導航"><svg class="pin" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></a>
+      </div>
+    </div>
+    <div class="stall">
+      <div class="stall-top">
+        <div class="body">
+          <p class="name">金得春捲</p>
+          <p class="addr">永樂市場</p>
+          <p class="desc">1954年創立。內餡包了蝦子、滷豬肉、蒜泥、香菜末、蛋皮、皇帝豆、高麗菜、花生糖粉、滷豆干，料多到誇張，鹹甜交織是台南獨有版本。</p>
+        </div>
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E9%87%91%E5%BE%97%E6%98%A5%E6%8D%B2+%E5%8F%B0%E5%8D%97%E6%B0%B8%E6%A8%82%E5%B8%82%E5%A0%B4" aria-label="導航"><svg class="pin" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></a>
+      </div>
+    </div>
+    <div class="stall">
+      <div class="stall-top">
+        <div class="body">
+          <p class="name">阿川紅燒土魠魚羹</p>
+          <p class="addr">中西區海安路</p>
+          <p class="desc">土魠魚塊外皮微酥、魚肉厚實有口感，羹湯偏甜是正統台南味。跟阿鳳的浮水魚羹是完全不同路線，兩者可比較著吃。</p>
+        </div>
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E9%98%BF%E5%B7%9D%E7%B4%85%E7%87%92%E5%9C%9F%E9%AD%A0%E9%AD%9A%E7%BE%B9+%E6%B5%B7%E5%AE%89%E8%B7%AF+%E5%8F%B0%E5%8D%97" aria-label="導航"><svg class="pin" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></a>
+      </div>
+    </div>
+    <div class="stall">
+      <div class="stall-top">
+        <div class="body">
+          <p class="name">修安扁擔豆花</p>
+          <p class="addr">永樂市場</p>
+          <p class="desc"><b>甜點</b>｜台南賣黑砂糖刨冰的先鋒。手工豆花選非基改黃豆、遵循古法無添加，搭配純手工Q彈粉粿（四種口味）＋一顆嫩焦糖布丁。</p>
+        </div>
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E4%BF%AE%E5%AE%89%E6%89%81%E6%93%94%E8%B1%86%E8%8A%B1+%E5%8F%B0%E5%8D%97" aria-label="導航"><svg class="pin" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></a>
+      </div>
+    </div>
+    <div class="stall">
+      <div class="stall-top">
+        <div class="body">
+          <p class="name">泰成水果店</p>
+          <p class="addr">正興街80號</p>
+          <p class="hours">12:00-18:00</p>
+          <p class="desc"><b>甜點</b>｜正興街老字號冰店。招牌是半顆哈密瓜當容器盛裝的水果冰，視覺浮誇、拍照效果好，水果新鮮。</p>
+        </div>
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E5%8F%B0%E5%8D%97%E5%B8%82%E4%B8%AD%E8%A5%BF%E5%8D%80%E6%AD%A3%E8%88%88%E8%A1%9780%E8%99%9F" aria-label="導航"><svg class="pin" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">順路加碼</div>
+
+  <div class="card">
+    <div class="card-top">
+      <div class="time">－</div>
+      <div class="body">
+        <p class="name">台南西市場（大菜市）</p>
+        <p class="addr">中西區西門路二段177號</p>
+        <p class="hours">平日11:00-20:00・假日11:00-21:00・週三公休・全館室內冷氣</p>
+        <p class="desc">跟阿村牛肉湯等店同一個街區，停車一樣是海安路地下停車場，不用多繞路。<b>市場內賣的是文創選物＋輕食點心、不是正餐</b>——建議吃完正餐後順路逛10-15分鐘：<b>百珍西點麵包</b>的古早味泡芙（比拳頭大）、<b>弄餅家</b>千層餅、<b>羊太咬咬</b>創意雞蛋糕、<b>BB.BABE</b>韓式大蒜乳酪麵包、登出茶飲／三蜂茶飲。</p>
+        <div class="tags"><span class="tag warn">週六人潮擠爆・週五風險低</span></div>
+      </div>
+      <div class="btnrow">
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E5%8F%B0%E5%8D%97%E5%B8%82%E4%B8%AD%E8%A5%BF%E5%8D%80%E8%A5%BF%E9%96%80%E8%B7%AF%E4%BA%8C%E6%AE%B5177%E8%99%9F" aria-label="導航">
+          <svg class="pin" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top">
+      <div class="time">－</div>
+      <div class="body">
+        <p class="name">冰鄉（芒果冰首推）</p>
+        <p class="addr">中西區民生路一段160號</p>
+        <p class="hours">13:00開賣，賣完為止</p>
+        <p class="desc">40年老店，多篇食記稱「地表最強芒果冰」「台南水果冰人氣霸主」。芒果牛奶冰用大量新鮮芒果切塊鋪滿整碗刨冰，淋煉乳與牛奶冰。離小吃巡禮路線步行5-10分鐘。<b>不接電話預訂，只能現場排隊</b>，沒趕上開店第一輪大概要等1-3小時。是否推出芒果冰請看粉專公告（icecountry160）。</p>
+        <div class="tags"><span class="tag warn">排隊風險高</span><span class="tag info">建議12:30先去排</span></div>
+      </div>
+      <div class="btnrow">
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E5%8F%B0%E5%8D%97%E5%B8%82%E4%B8%AD%E8%A5%BF%E5%8D%80%E6%B0%91%E7%94%9F%E8%B7%AF%E4%B8%80%E6%AE%B5160%E8%99%9F" aria-label="導航">
+          <svg class="pin" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">傍晚 · 嘉義</div>
+
+  <div class="card">
+    <div class="card-top">
+      <div class="time">16:30</div>
+      <div class="body">
+        <p class="name">嘉義智選假日酒店 Check-in</p>
+        <p class="addr">嘉義市西區中興路69號</p>
+        <p class="desc">地下室車位充足，滿位可改停同基地內戶外空地，備援方案就在原地不需外找。此時間點已避開下班車潮尾段。</p>
+      </div>
+      <div class="btnrow">
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E5%98%89%E7%BE%A9%E5%B8%82%E8%A5%BF%E5%8D%80%E4%B8%AD%E8%88%88%E8%B7%AF69%E8%99%9F" aria-label="導航">
+          <svg class="pin" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top">
+      <div class="time">19:00</div>
+      <div class="body">
+        <p class="name">佳園汕頭火鍋</p>
+        <p class="addr">嘉義市西區新榮路269號</p>
+        <p class="hours">11:00-14:30、17:00-22:00・週一公休</p>
+        <p class="desc">食尚玩家稱「全嘉最道地、最正宗的汕頭火鍋」，師承屏東新園牛肉爐。必吃：<b>霜降牛肉角（美國）</b>、<b>蛋酥</b>（汕頭鍋必加，湯頭更香順）、麻香牛肉丸、芝心牛肉丸、方形魚豆腐。自製沙茶醬是招牌，另有花生醬與白醋。開鍋先上湯底乾料，桌邊服務加湯。一樓拿料方便但擠，二樓較寬闊可以問看看。</p>
+        <div class="tags"><span class="tag ok">已訂位</span><span class="tag warn">只收現金</span></div>
+      </div>
+      <div class="btnrow">
+        <a class="call-btn" href="tel:0522200088" aria-label="電話">
+          <svg class="phone" viewBox="0 0 24 24" fill="none" stroke="#c68a2e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </a>
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E5%98%89%E7%BE%A9%E5%B8%82%E8%A5%BF%E5%8D%80%E6%96%B0%E6%A6%AE%E8%B7%AF269%E8%99%9F" aria-label="導航">
+          <svg class="pin" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="day" id="d22">
+
+  <div class="notice">
+    <b>培桂堂已預約 11:30</b>｜序號 2608171203J4OX7・2人・現場取票付款（NT$0）・請帶身分證明文件<br>
+    <b>停車兩次：</b>新港奉天宮周邊（上午到午後）→ 新港香藝文化園區（自有停車場）
+  </div>
+
+  <div class="section-label">上午 · 新港</div>
+
+  <div class="card">
+    <div class="card-top">
+      <div class="time">10:30</div>
+      <div class="body">
+        <p class="name">新港奉天宮停車場</p>
+        <p class="desc">停奉天宮停車場或新港鄉立體停車場。以下鴨肉羹、奉天宮、培桂堂、粉條冰全部步行可達，不需移車。</p>
+      </div>
+      <div class="btnrow">
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E6%96%B0%E6%B8%AF%E5%A5%89%E5%A4%A9%E5%AE%AE%E5%81%9C%E8%BB%8A%E5%A0%B4" aria-label="導航">
+          <svg class="pin" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top">
+      <div class="time">10:35</div>
+      <div class="body">
+        <p class="name">新港生炒鴨肉羹</p>
+        <p class="addr">中山路奉天大廈17號</p>
+        <p class="hours">07:30-18:30</p>
+        <p class="desc">傳承三代百年老店。用特選土番鴨切薄片，大火加洋蔥爆香快炒，再加馬鈴薯粉、鴨骨湯與筍絲勾芡。一碗50元。<b>必加辣椒粉和五賢醋</b>，「不加味道就不對了」。刻意提早吃：避開12點高峰，中午排隊會延伸三個店面長。</p>
+      </div>
+      <div class="btnrow">
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E6%96%B0%E6%B8%AF%E7%94%9F%E7%82%92%E9%B4%A8%E8%82%89%E7%BE%B9%20%E5%98%89%E7%BE%A9%E7%B8%A3%E6%96%B0%E6%B8%AF%E9%84%89%E4%B8%AD%E5%B1%B1%E8%B7%AF%E5%A5%89%E5%A4%A9%E5%A4%A7%E5%BB%8817%E8%99%9F" aria-label="導航">
+          <svg class="pin" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top">
+      <div class="time">11:10</div>
+      <div class="body">
+        <p class="name">新港奉天宮</p>
+        <p class="desc">拜拜求平安，15分鐘。國定古蹟、主祀媽祖，新港信仰中心，可賞精湛建築雕工。<b>時間抓緊一點，培桂堂11:30不能遲到</b>。</p>
+      </div>
+      <div class="btnrow">
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E6%96%B0%E6%B8%AF%E5%A5%89%E5%A4%A9%E5%AE%AE" aria-label="導航">
+          <svg class="pin" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top">
+      <div class="time">11:30</div>
+      <div class="body">
+        <p class="name">培桂堂（林開泰診療所舊宅）</p>
+        <p class="addr">新港鄉大興路19號・從奉天宮步行3分鐘</p>
+        <p class="hours">09:30-17:00（16:30停止入園）・週一二公休・免費入園</p>
+        <p class="desc"><b>雲門舞集創辦人林懷民的老家</b>。近百年古宅、嘉義縣定古蹟，1933年由林維朝為兒子林開泰興建，閩式為主體，細節揉合日式與西洋風格。歷經兩年、花3700萬元整修，2023年對外開放。參觀動線：診療所→前廊→大廳→新娘房→榻榻米間→食飯間與灶腳→讀書間。林開泰11位兒女中15位取得博士學位，被暱稱「博士窩」。<br><b>已預約11:30場次，序號2608171203J4OX7</b>，現場憑序號＋身分證明文件取票。出來時順道走一下大興路與新港老街。</p>
+      </div>
+      <div class="btnrow">
+        <a class="call-btn" href="tel:0537499992" aria-label="電話">
+          <svg class="phone" viewBox="0 0 24 24" fill="none" stroke="#c68a2e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </a>
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E5%98%89%E7%BE%A9%E7%B8%A3%E6%96%B0%E6%B8%AF%E9%84%89%E5%A4%A7%E8%88%88%E8%B7%AF19%E8%99%9F" aria-label="導航">
+          <svg class="pin" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top">
+      <div class="time">12:30</div>
+      <div class="body">
+        <p class="name">培桂堂玻璃屋星巴克</p>
+        <p class="hours">09:00-17:00 天天開（不受古蹟公休影響）</p>
+        <p class="desc">園區最深處兩棟深灰色玻璃屋，現代簡約設計融入百年老宅庭院。巨大龍眼樹綠蔭下，二樓咖啡座可俯視林宅磚紅屋頂延伸天際。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-top">
+      <div class="time">13:00</div>
+      <div class="body">
+        <p class="name">阿正師粉條冰</p>
+        <p class="addr">新港鄉新民路142號・步行約5分</p>
+        <p class="hours">08:00-18:00</p>
+        <p class="desc">傳承三代、經營超過百年。粉條是地瓜粉＋粉漿混合煮成再冰鎮，Q彈有勁，搭配自家紅糖漿。<b>一碗45元可以加到滿，能吃到9種配料</b>，份量大到要兩隻手才端得起來。<b>建議外帶</b>：內用環境會聞到隔壁攤位的油垢味。</p>
+      </div>
+      <div class="btnrow">
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E5%98%89%E7%BE%A9%E7%B8%A3%E6%96%B0%E6%B8%AF%E9%84%89%E6%96%B0%E6%B0%91%E8%B7%AF142%E8%99%9F" aria-label="導航">
+          <svg class="pin" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">午後 · 新港</div>
+
+  <div class="card">
+    <div class="card-top">
+      <div class="time">13:40</div>
+      <div class="body">
+        <p class="name">新港香藝文化園區</p>
+        <p class="addr">新港鄉嘉北公路23-6號</p>
+        <p class="desc">核心的香藝文化館與餐廳都有冷氣、園區平坦好走，最精彩的看製香是透過玻璃窗看師傅手藝（在室內），午後雷雨與高溫都不影響。可看：文化香／生活香／藝品香等主題展區、情境聞香（宋朝文人焚香情境）、玻璃窗看現場製香八式工序。<b>DIY體驗</b>：搓香、香包、防蚊膏。沒下雨可走出去看香料藥草園、八卦香波波草、錦鯉池、小動物區。</p>
+        <div class="tags"><span class="tag warn">先電話確認營業時間</span></div>
+      </div>
+      <div class="btnrow">
+        <a class="call-btn" href="tel:0537477658" aria-label="電話">
+          <svg class="phone" viewBox="0 0 24 24" fill="none" stroke="#c68a2e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        </a>
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E5%98%89%E7%BE%A9%E7%B8%A3%E6%96%B0%E6%B8%AF%E9%84%89%E5%98%89%E5%8C%97%E5%85%AC%E8%B7%AF23-6%E8%99%9F" aria-label="導航">
+          <svg class="pin" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <p class="group-note" style="margin-top:14px;">網路資料矛盾：多數說「08:00-18:00每天開免門票」，但有2025年資料說「週三～週日09:00-17:00、週一二公休、清潔費50元/人可折抵消費」。8/22週六兩版本都有開，但收費與關門時間不同，<b>先電話確認較保險</b>。記得帶防蚊液（園區有戶外綠地區）。</p>
+
+  <div class="section-label">晚上 · 文化路夜市 18:30起</div>
+  <p class="group-note">建議18:30就到，趕在19:00管制與人潮高峰前先吃主食。<b>19:00-23:00夜市會交通管制、規劃為行人徒步區</b>。不要把SUV開進管制區周邊，改搭車或走過去。</p>
+
+  <div class="card">
+    <div class="stall">
+      <div class="stall-top">
+        <div class="body">
+          <p class="name">珍珍蚵仔煎海產粥</p>
+          <p class="hours">晚上才營業，開到凌晨</p>
+          <p class="desc">文化路夜市人氣最旺的攤，已從攤位遷到店面。<b>三寶海產粥</b>（花枝、虱目魚、蝦、章魚、蛤蠣、香菇、筍絲）、<b>蚵仔煎</b>（煎得赤脆料多）、<b>虱目魚肚</b>（抹薄鹽兩面煎酥，擠檸檬汁）。</p>
+        </div>
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E7%8F%8D%E7%8F%8D%E8%9A%B5%E4%BB%94%E7%85%8E%E6%B5%B7%E7%94%A2%E7%B2%A5%20%E5%98%89%E7%BE%A9%E6%96%87%E5%8C%96%E8%B7%AF" aria-label="導航"><svg class="pin" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></a>
+      </div>
+    </div>
+    <div class="stall">
+      <div class="stall-top">
+        <div class="body">
+          <p class="name">林聰明沙鍋魚頭</p>
+          <p class="addr">中正路361號</p>
+          <p class="hours">12:00-21:00・週二公休</p>
+          <p class="desc">登上Netflix紀錄片、超過60年的嘉義代表美食，沙茶湯底豬骨熬8-10小時。<b>沙鍋菜＋魚肉一人份就夠兩人吃</b>。必點<b>冬菜蝦仁蛋湯</b>（鎮店之寶，每天最快賣完）、太陽蛋、火雞肉飯。內用要先抽號碼牌、點完餐結完帳才安排位置。</p>
+        </div>
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E5%98%89%E7%BE%A9%E5%B8%82%E6%9D%B1%E5%8D%80%E4%B8%AD%E6%AD%A3%E8%B7%AF361%E8%99%9F" aria-label="導航"><svg class="pin" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></a>
+      </div>
+    </div>
+    <div class="stall">
+      <div class="stall-top">
+        <div class="body">
+          <p class="name">黃毛ㄚ頭東山鴨頭</p>
+          <p class="hours">13:30-23:30</p>
+          <p class="desc">1997年創立，傳承40年台南滷汁秘方。醬汁鹹香帶甜不死鹹、不油膩，品項超多，適合買了邊逛邊吃。</p>
+        </div>
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E9%BB%83%E6%AF%9B%E3%84%9A%E9%A0%AD%E6%9D%B1%E5%B1%B1%E9%B4%A8%E9%A0%AD%20%E5%98%89%E7%BE%A9%E6%96%87%E5%8C%96%E8%B7%AF%E5%A4%9C%E5%B8%82" aria-label="導航"><svg class="pin" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></a>
+      </div>
+    </div>
+    <div class="stall">
+      <div class="stall-top">
+        <div class="body">
+          <p class="name">阿婆烤玉米</p>
+          <p class="addr">民族路312號</p>
+          <p class="hours">11:30-21:00・週二公休</p>
+          <p class="desc">碳烤古早味烤玉米，適合當補充小食。</p>
+        </div>
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E5%98%89%E7%BE%A9%E5%B8%82%E6%9D%B1%E5%8D%80%E6%B0%91%E6%97%8F%E8%B7%AF312%E8%99%9F" aria-label="導航"><svg class="pin" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></a>
+      </div>
+    </div>
+    <div class="stall">
+      <div class="stall-top">
+        <div class="body">
+          <p class="name">阿賢刈包</p>
+          <p class="hours">21:30才開攤</p>
+          <p class="desc">文化路巷弄內，老嘉義人的深夜主戰場，刈包秒殺，三層肉肥而不膩。適合當宵夜第二攤。</p>
+        </div>
+        <a class="nav-btn" href="https://www.google.com/maps/search/?api=1&query=%E9%98%BF%E8%B3%A2%E5%88%88%E5%8C%85+%E5%98%89%E7%BE%A9%E6%96%87%E5%8C%96%E8%B7%AF" aria-label="導航"><svg class="pin" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+</div>
+
+</main>
+
+<footer>台南 · 嘉義兩日行程　點導航圖示直接開Google地圖・點電話圖示直接撥打</footer>
+
+<script>
+  var tabs = document.querySelectorAll('.tab');
+  var days = document.querySelectorAll('.day');
+  tabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      tabs.forEach(function(t) { t.classList.remove('active'); });
+      days.forEach(function(d) { d.classList.remove('active'); });
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.day).classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
